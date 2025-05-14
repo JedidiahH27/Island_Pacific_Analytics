@@ -1,13 +1,8 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
 
-# Set Streamlit style
-st.set_page_config(page_title="Island Pacific Dashboard", layout="wide")
-st.title("📊 Island Pacific Sales Dashboard")
-
-# Load data
+# Load the data
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/island_pacific_sales.csv", parse_dates=["date"])
@@ -16,56 +11,82 @@ def load_data():
 df = load_data()
 
 # Sidebar filters
-st.sidebar.header("🔎 Filters")
-store = st.sidebar.multiselect("Select Store", options=df['store'].unique(), default=df['store'].unique())
-category = st.sidebar.multiselect("Select Category", options=df['category'].unique(), default=df['category'].unique())
+st.sidebar.header("📊 Filter Data")
+store_filter = st.sidebar.multiselect("Select Store", options=df["store"].unique(), default=df["store"].unique())
+category_filter = st.sidebar.multiselect("Select Category", options=df["category"].unique(), default=df["category"].unique())
 
-# Filtered DataFrame
-filtered_df = df[(df['store'].isin(store)) & (df['category'].isin(category))]
+filtered_df = df[(df["store"].isin(store_filter)) & (df["category"].isin(category_filter))]
 
-# KPI Section
-total_sales = filtered_df['total_sales'].sum()
-total_units = filtered_df['quantity_sold'].sum()
-return_rate = filtered_df['returned'].sum() / filtered_df['quantity_sold'].sum()
+# KPIs
+total_sales = filtered_df["total_sales"].sum()
+units_sold = filtered_df["quantity_sold"].sum()
+return_rate = (filtered_df["returned"].sum() / units_sold) * 100 if units_sold > 0 else 0
+
+st.title("🏪 Island Pacific Sales Dashboard")
 
 col1, col2, col3 = st.columns(3)
-col1.metric("💰 Total Revenue", f"${total_sales:,.2f}")
-col2.metric("📦 Total Units Sold", f"{total_units:,}")
-col3.metric("↩️ Return Rate", f"{return_rate:.2%}")
+col1.metric("💵 Total Sales", f"${total_sales:,.2f}")
+col2.metric("📦 Units Sold", f"{int(units_sold)}")
+col3.metric("↩️ Return Rate", f"{return_rate:.2f}%")
 
 st.markdown("---")
 
-# Time Series Sales
-st.subheader("🕒 Sales Over Time")
-sales_by_date = filtered_df.groupby("date")['total_sales'].sum().reset_index()
+# Sales over time
+sales_by_date = (
+    filtered_df.groupby("date")["total_sales"]
+    .sum()
+    .reset_index()
+    .sort_values("date")
+)
 
-fig, ax = plt.subplots(figsize=(10, 4))
-sns.lineplot(data=sales_by_date, x='date', y='total_sales', ax=ax)
-ax.set_title("Total Sales Over Time")
-ax.set_ylabel("Sales ($)")
-st.pyplot(fig)
-
-st.markdown("---")
+fig1 = px.line(
+    sales_by_date,
+    x="date",
+    y="total_sales",
+    title="📈 Total Sales Over Time",
+    labels={"total_sales": "Sales ($)", "date": "Date"},
+    template="plotly_white"
+)
+st.plotly_chart(fig1, use_container_width=True)
 
 # Sales by Category
-st.subheader("📁 Sales by Category")
-sales_by_cat = filtered_df.groupby("category")['total_sales'].sum().sort_values(ascending=False)
+sales_by_category = (
+    filtered_df.groupby("category")["total_sales"]
+    .sum()
+    .reset_index()
+    .sort_values("total_sales", ascending=False)
+)
 
-fig2, ax2 = plt.subplots()
-sns.barplot(x=sales_by_cat.values, y=sales_by_cat.index, palette="viridis", ax=ax2)
-ax2.set_xlabel("Sales ($)")
-st.pyplot(fig2)
+fig2 = px.bar(
+    sales_by_category,
+    x="total_sales",
+    y="category",
+    orientation="h",
+    title="📦 Sales by Category",
+    labels={"total_sales": "Sales ($)", "category": "Product Category"},
+    template="plotly_white"
+)
+st.plotly_chart(fig2, use_container_width=True)
 
 # Top Products
-st.subheader("🏆 Top 10 Products by Revenue")
 top_products = (
     filtered_df.groupby("product")["total_sales"]
     .sum()
-    .sort_values(ascending=False)
+    .reset_index()
+    .sort_values("total_sales", ascending=False)
     .head(10)
 )
 
-fig3, ax3 = plt.subplots()
-sns.barplot(x=top_products.values, y=top_products.index, palette="mako", ax=ax3)
-ax3.set_xlabel("Sales ($)")
-st.pyplot(fig3)
+fig3 = px.bar(
+    top_products,
+    x="total_sales",
+    y="product",
+    orientation="h",
+    title="🏆 Top 10 Products by Sales",
+    labels={"total_sales": "Sales ($)", "product": "Product"},
+    template="plotly_white"
+)
+st.plotly_chart(fig3, use_container_width=True)
+
+st.markdown("---")
+st.caption("Made by Jedidiah Hernandez | [GitHub](https://github.com/JedidiahH27) | [LinkedIn](https://linkedin.com/in/jedidiah-hernandez)")
