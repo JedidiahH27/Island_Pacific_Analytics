@@ -1,37 +1,70 @@
-# 🛒 Island Pacific Sales Dashboard
+# 🏪 Island Pacific Analytics Dashboard
 
-A retail data analytics dashboard built with **Streamlit** to help Island Pacific supermarkets track sales, inventory movement, product returns, and customer behavior.
+This is an interactive data analytics dashboard built with **Streamlit** and **Plotly** using simulated retail sales data from a fictional grocery chain, *Island Pacific*.
 
-This interactive web app enables data exploration and KPI monitoring across multiple stores, product categories, and time periods.
+The goal of this project is to demonstrate my ability to perform **data cleaning**, **exploratory data analysis (EDA)**, and **interactive dashboard development** — with a focus on real-world business insights relevant to roles like:
 
----
-
-## 📊 Features
-
-- 📈 **Live KPIs**: Total Revenue, Units Sold, Return Rate
-- 📅 **Sales Over Time**: Line chart of revenue trends
-- 📁 **Category Insights**: Visual breakdown of category performance
-- 🏆 **Top Products**: Bar chart of best sellers
-- 🧭 **Filter by Store or Category**: Interactive sidebar filters
-- 📤 **Deployable to Streamlit Cloud**
+- Retail Data Analyst  
+- Inventory Analyst  
+- Business Intelligence Analyst  
 
 ---
 
-## 📁 Data
+## 🚀 Features
 
-The dataset was simulated and includes:
-- `date`, `store`, `product`, `category`
-- `quantity_sold`, `price_per_unit`, `discount_applied`, `total_sales`, `returned`
-
-> Example use case: Tracking seasonal demand, optimizing stock, reducing returns, and identifying top products by store or category.
+- **Live dashboard filters** (by store and category)
+- **Key performance indicators (KPIs)**:
+  - Total sales
+  - Units sold
+  - Return rate
+- **Visual analytics**:
+  - Sales trends over time
+  - Sales by product category
+  - Top 10 products by total revenue
+- Clean, modern visuals using **Plotly**
 
 ---
 
-## 🚀 Getting Started
+## 🧠 What You’ll Learn from This Project
 
-### ▶️ Run Locally
+- How product-level data can be used to track performance and inventory needs  
+- How to monitor return rates and flag operational issues  
+- How category-level and store-level breakdowns help with regional decision-making  
+- How interactive dashboards empower non-technical stakeholders  
 
-1. Clone the repository:
+---
+
+## 📁 Dataset Overview
+
+The dataset is simulated and includes:
+
+| Column Name         | Description                            |
+|---------------------|----------------------------------------|
+| `date`              | Date of the sale                       |
+| `store`             | Store location                         |
+| `product`           | Product sold                           |
+| `category`          | Product category                       |
+| `quantity_sold`     | Number of units sold                   |
+| `price_per_unit`    | Price per item                         |
+| `discount_applied`  | Discount on the sale                   |
+| `total_sales`       | Final revenue from the transaction     |
+| `returned`          | Whether the item was returned (0 or 1) |
+
+---
+
+## 🛠️ Tech Stack
+
+- **Python**
+- **Streamlit** for web app UI
+- **Plotly** for interactive charts
+- **Pandas** for data wrangling
+
+---
+
+## ▶️ Run It Locally
+
 ```bash
 git clone https://github.com/JedidiahH27/Island_Pacific_Analytics.git
-cd island-pacific-analytics
+cd Island_Pacific_Analytics
+pip install -r requirements.txt
+streamlit run app.py
