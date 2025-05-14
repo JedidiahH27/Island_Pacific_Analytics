@@ -33,5 +33,5 @@ The dataset was simulated and includes:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/JedidiahH27/island-pacific-analytics.git
+git clone https://github.com/JedidiahH27/Island_Pacific_Analytics.git
 cd island-pacific-analytics
